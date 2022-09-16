@@ -1,0 +1,7 @@
+export { defaultGenerateHash } from './lib/hash'
+export { CacheTagsRegistry } from './lib/registry/base'
+export { MemoryCacheTagsRegistry } from './lib/registry/memory'
+export { LowdbCacheTagsRegistry } from './lib/registry/lowdb'
+export { RedisCacheTagsRegistry } from './lib/registry/redis'
+export { CacheTags } from './lib/cache-tags'
+export type { TagsResolver } from './lib/cache-tags'
