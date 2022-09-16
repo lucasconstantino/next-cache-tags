@@ -11,11 +11,9 @@
     "src"
   ],
   "scripts": {
-    "analyze": "size-limit --why",
     "build": "tsdx build",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
-    "size": "size-limit",
     "start": "tsdx watch",
     "test": "tsdx test --passWithNoTests",
     "type-check": "tsc"
@@ -32,7 +30,6 @@
     "trailingComma": "es5"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^8.1.0",
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
     "husky": "^8.0.1",
@@ -40,7 +37,6 @@
     "node-mocks-http": "^1.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "size-limit": "^8.1.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
     "typescript": "^4.8.3"
@@ -51,16 +47,6 @@
   "engines": {
     "node": ">=10"
   },
-  "size-limit": [
-    {
-      "path": "dist/next-cache-tags.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/next-cache-tags.esm.js",
-      "limit": "10 KB"
-    }
-  ],
   "dependencies": {
     "lowdb": "^3.0.0",
     "redis": "^4.3.1"
