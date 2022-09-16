@@ -1,26 +1,24 @@
 {
+  "name": "next-cache-tags",
   "version": "0.1.0",
   "license": "MIT",
+  "author": "Lucas Constantino Silva",
   "main": "dist/index.js",
+  "module": "dist/next-cache-tags.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
-    "start": "tsdx watch",
+    "analyze": "size-limit --why",
     "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
-  },
-  "peerDependencies": {
-    "react": ">=16"
+    "start": "tsdx watch",
+    "test": "tsdx test --passWithNoTests",
+    "type-check": "tsc"
   },
   "husky": {
     "hooks": {
@@ -29,13 +27,30 @@
   },
   "prettier": {
     "printWidth": 80,
-    "semi": true,
+    "semi": false,
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "next-cache-tags",
-  "author": "Lucas Constantino Silva",
-  "module": "dist/next-cache-tags.esm.js",
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^8.1.0",
+    "@types/react": "^18.0.20",
+    "@types/react-dom": "^18.0.6",
+    "husky": "^8.0.1",
+    "next": "^12.3.0",
+    "node-mocks-http": "^1.11.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "size-limit": "^8.1.0",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.8.3"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "engines": {
+    "node": ">=10"
+  },
   "size-limit": [
     {
       "path": "dist/next-cache-tags.cjs.production.min.js",
@@ -46,16 +61,8 @@
       "limit": "10 KB"
     }
   ],
-  "devDependencies": {
-    "@size-limit/preset-small-lib": "^8.1.0",
-    "@types/react": "^18.0.20",
-    "@types/react-dom": "^18.0.6",
-    "husky": "^8.0.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "size-limit": "^8.1.0",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.4.0",
-    "typescript": "^4.8.3"
+  "dependencies": {
+    "lowdb": "^3.0.0",
+    "redis": "^4.3.1"
   }
 }
