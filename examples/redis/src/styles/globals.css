@@ -31,12 +31,14 @@ a {
 
 #alphabet > li {
   position: relative;
-  display: inline-flex;
   height: 1em;
   width: 1em;
   flex-shrink: 0;
+
+  display: inline-flex;
   justify-content: center;
   align-items: center;
+
   cursor: pointer;
 }
 
@@ -60,4 +62,8 @@ a {
 #alphabet > li a:hover::after {
   height: 150%;
   width: 150%;
+}
+
+#alphabet > li.current a {
+  text-decoration: underline;
 }
