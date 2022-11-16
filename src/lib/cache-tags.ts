@@ -1,5 +1,5 @@
-import type * as Next from 'next'
-import type { CacheTagsRegistry } from './registry/base'
+import * as Next from 'next'
+import { CacheTagsRegistry } from './registry/base'
 import { defaultGenerateHash, noHash } from './hash'
 
 type Config<R extends CacheTagsRegistry> = {
@@ -20,7 +20,9 @@ type Config<R extends CacheTagsRegistry> = {
 }
 
 interface TagsResolver {
-  (req: Next.NextApiRequest, res: Next.NextApiResponse): Promise<string[]> | string[]
+  (req: Next.NextApiRequest, res: Next.NextApiResponse):
+    | Promise<string[]>
+    | string[]
 }
 
 /**
@@ -35,7 +37,9 @@ class CacheTags<R extends CacheTagsRegistry> {
     this.log = config.log ?? false
     this.registry = config.registry
     this.generateHash =
-      config.generateHash === false ? noHash : config.generateHash ?? defaultGenerateHash
+      config.generateHash === false
+        ? noHash
+        : config.generateHash ?? defaultGenerateHash
   }
 
   /**
@@ -80,7 +84,9 @@ class CacheTags<R extends CacheTagsRegistry> {
       tags?: string[]
     ) => Promise<void> | void = (error, _req, res) => {
       console.error(error)
-      res.status(500).json({ message: error instanceof Error ? error.message : 'Unknown error' })
+      res.status(500).json({
+        message: error instanceof Error ? error.message : 'Unknown error',
+      })
     }
   ): Next.NextApiHandler {
     return async (req, res) => {
@@ -94,7 +100,8 @@ class CacheTags<R extends CacheTagsRegistry> {
           this.log && console.log(`[next-cache-tags] Invalidating "${tag}":`)
 
           // Fetch the paths related to the invalidating cache-tag.
-          const paths = (await this.registry.extract(this.generateHash(tag))) ?? []
+          const paths =
+            (await this.registry.extract(this.generateHash(tag))) ?? []
 
           for (const path of paths) {
             this.log && console.log(`  - ${path}`)
@@ -113,6 +120,6 @@ class CacheTags<R extends CacheTagsRegistry> {
 }
 
 // Expose tags resolver so that it can be easily extended.
-export type { TagsResolver }
+export { TagsResolver }
 
 export { CacheTags }

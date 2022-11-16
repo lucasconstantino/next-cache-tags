@@ -6,7 +6,11 @@ describe('defaultGenerateHash', () => {
   })
 
   it('should create indepotent hashes', () => {
-    expect(defaultGenerateHash('some-tag')).toBe(defaultGenerateHash('some-tag'))
-    expect(defaultGenerateHash('some-tag')).not.toBe(defaultGenerateHash('other-tag'))
+    expect(defaultGenerateHash('some-tag')).toBe(
+      defaultGenerateHash('some-tag')
+    )
+    expect(defaultGenerateHash('some-tag')).not.toBe(
+      defaultGenerateHash('other-tag')
+    )
   })
 })

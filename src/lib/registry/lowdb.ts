@@ -1,7 +1,10 @@
 import { Low, JSONFile } from 'lowdb'
 import { CacheTagsRegistry } from './base'
 
-type Database = { lock?: string | null } & Record<string, Record<string, string>>
+type Database = { lock?: string | null } & Record<
+  string,
+  Record<string, string>
+>
 type Action<R> = (data: Database) => Promise<R> | R
 type Store = Low<Database>
 
@@ -35,7 +38,7 @@ class LowdbCacheTagsRegistry extends CacheTagsRegistry {
       await this.store.write()
     }
 
-    acquire: while (true) {
+    while (true) {
       await this.store.read()
       const currentLock = this.store.data?.lock
 
@@ -54,14 +57,14 @@ class LowdbCacheTagsRegistry extends CacheTagsRegistry {
       // Try to acquire lock.
       if (!currentLock) {
         await acquire()
-        continue acquire
+        continue
       }
 
       if (tried++ > 50) {
         // We probably got locked in a broken state
         if (firstLock === currentLock) {
           await acquire()
-          continue acquire
+          continue
         }
 
         throw new Error('Could not establish safe connection to lowdb')
@@ -70,7 +73,7 @@ class LowdbCacheTagsRegistry extends CacheTagsRegistry {
       console.log(lock, 'waiting')
 
       // Await to try again
-      await new Promise((res) => setTimeout(res, 100))
+      await new Promise(res => setTimeout(res, 100))
     }
   }
 
@@ -100,7 +103,7 @@ class LowdbCacheTagsRegistry extends CacheTagsRegistry {
   }
 
   register = async (path: string, tags: string[]) =>
-    await void this.act((data) => {
+    await void this.act(data => {
       const now = new Date().toISOString()
 
       for (const tag of tags) {
@@ -110,7 +113,7 @@ class LowdbCacheTagsRegistry extends CacheTagsRegistry {
     })
 
   extract = async (tag: string) =>
-    await this.act((data) => {
+    await this.act(data => {
       const paths = Object.keys(data[tag] ?? {})
       delete data[tag]
       return paths
