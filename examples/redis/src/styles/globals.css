@@ -40,7 +40,7 @@ a {
   cursor: pointer;
 }
 
-#alphabet > li::after {
+#alphabet > li a::after {
   content: '';
   position: absolute;
   z-index: -1;
@@ -57,7 +57,7 @@ a {
   transition: 250ms;
 }
 
-#alphabet > li:hover::after {
+#alphabet > li a:hover::after {
   height: 150%;
   width: 150%;
 }
