@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  text-align: center;
 }
 
 a {
@@ -13,4 +16,48 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+#alphabet {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+
+  font-family: 'Permanent Marker', cursive;
+  font-size: 6em;
+
+  max-width: 6em;
+}
+
+#alphabet > li {
+  position: relative;
+  display: inline-flex;
+  height: 1em;
+  width: 1em;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#alphabet > li::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  background: #ddd;
+  opacity: 0.5;
+  transform: translate3d(-50%, -50%, 0);
+
+  border-radius: 50%;
+  height: 0;
+  width: 0;
+
+  transition: 250ms;
+}
+
+#alphabet > li:hover::after {
+  height: 150%;
+  width: 150%;
 }
