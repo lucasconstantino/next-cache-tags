@@ -20,6 +20,13 @@ const usePageLetters = () => {
 const HomePage = () => {
   const [previous, current, next] = usePageLetters()
 
+  const purgeLetter = (letter: Letter): React.MouseEventHandler => e => {
+    // Cmd/Ctrl is pressed
+    if (e.metaKey) {
+      e.preventDefault()
+    }
+  }
+
   return (
     <div>
       <h1>Cache Tags Alphabet</h1>
@@ -51,7 +58,12 @@ const HomePage = () => {
               current: current === letter,
             })}
           >
-            <Link href={current === letter ? '/' : `/${letter}`}>{letter}</Link>
+            <Link
+              href={current === letter ? '/' : `/${letter}`}
+              onClick={purgeLetter(letter)}
+            >
+              {letter}
+            </Link>
           </li>
         ))}
       </ul>
