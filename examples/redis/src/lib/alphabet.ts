@@ -25,4 +25,4 @@ export const alphabet = [
   'X',
   'Y',
   'Z',
-]
+] as const

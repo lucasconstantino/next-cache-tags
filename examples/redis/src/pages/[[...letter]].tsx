@@ -1,11 +1,24 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import classnames from 'classnames'
 import { alphabet } from '~/lib/alphabet'
 
-const usePageLetter = () => useRouter().query.letter?.[0].toUpperCase() ?? null
+type Letter = typeof alphabet[number]
+
+/**
+ * Get the letters related to the current page.
+ */
+const usePageLetters = () => {
+  const letter = useRouter().query.letter
+  const current = (letter?.[0].toUpperCase() as Letter) ?? null
+  const previous = alphabet[alphabet.indexOf(current) - 1] ?? null
+  const next = alphabet[alphabet.indexOf(current) + 1] ?? null
+
+  return [previous, current, next]
+}
 
 const HomePage = () => {
-  const current = usePageLetter()
+  const [previous, current, next] = usePageLetters()
 
   return (
     <div>
@@ -24,16 +37,21 @@ const HomePage = () => {
         <strong>
           2) Cmd+click a letter to renew the cache of all related letter pages.
         </strong>
+        <br />
+        <strong>3) Click on the current letter to navigate to home</strong>
       </p>
 
-      <ul id="alphabet">
+      <ul id="alphabet" className={classnames({ hasCurrent: !!current })}>
         {alphabet.map(letter => (
           <li
             key={letter}
             tabIndex={1}
-            className={current === letter ? 'current' : ''}
+            className={classnames({
+              highlighted: [previous, current, next].includes(letter),
+              current: current === letter,
+            })}
           >
-            <Link href={`/${letter}`}>{letter}</Link>
+            <Link href={current === letter ? '/' : `/${letter}`}>{letter}</Link>
           </li>
         ))}
       </ul>
