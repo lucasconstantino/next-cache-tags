@@ -26,3 +26,5 @@ export const alphabet = [
   'Y',
   'Z',
 ] as const
+
+export type Letter = typeof alphabet[number]

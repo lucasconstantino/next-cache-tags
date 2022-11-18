@@ -1,31 +1,25 @@
+import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import classnames from 'classnames'
 import { alphabet } from '~/lib/alphabet'
+import type { Letter } from '~/lib/alphabet'
+import { cacheTags } from '~/lib/cache-tags'
 
-type Letter = typeof alphabet[number]
-
-/**
- * Get the letters related to the current page.
- */
-const usePageLetters = () => {
-  const letter = useRouter().query.letter
-  const current = (letter?.[0].toUpperCase() as Letter) ?? null
-  const previous = alphabet[alphabet.indexOf(current) - 1] ?? null
-  const next = alphabet[alphabet.indexOf(current) + 1] ?? null
-
-  return [previous, current, next]
+type Props = {
+  letters: [Letter | null, Letter | null, Letter | null]
 }
 
-const HomePage = () => {
-  const [previous, current, next] = usePageLetters()
+const HomePage: NextPage<Props> = ({ letters }) => {
+  const [previous, current, next] = letters
 
-  const purgeLetter = (letter: Letter): React.MouseEventHandler => e => {
-    // Cmd/Ctrl is pressed
-    if (e.metaKey) {
-      e.preventDefault()
+  const purgeLetter =
+    (letter: Letter): React.MouseEventHandler =>
+    (e) => {
+      // Cmd/Ctrl is pressed
+      if (e.metaKey) {
+        e.preventDefault()
+      }
     }
-  }
 
   return (
     <div>
@@ -49,7 +43,7 @@ const HomePage = () => {
       </p>
 
       <ul id="alphabet" className={classnames({ hasCurrent: !!current })}>
-        {alphabet.map(letter => (
+        {alphabet.map((letter) => (
           <li
             key={letter}
             tabIndex={1}
@@ -70,5 +64,33 @@ const HomePage = () => {
     </div>
   )
 }
+
+const getStaticProps: GetStaticProps<Props, { letter?: [Letter] }> = (ctx) => {
+  const curr = (ctx.params?.letter?.[0]?.toUpperCase() ?? null) as Letter | null
+  const prev = (curr && alphabet[alphabet.indexOf(curr) - 1]) ?? null
+  const next = (curr && alphabet[alphabet.indexOf(curr) + 1]) ?? null
+
+  // All letters relevant to this page
+  const letters = [prev, curr, next] as Props['letters']
+
+  // Path to current page. Next.js does not provide it anywhere.
+  const path = `/${curr ?? ''}`
+  const tags = letters.filter(Boolean).map((letter) => `letter:${letter}`)
+
+  // Register tags for this page.
+  cacheTags.register(path, tags)
+
+  return { props: { letters: letters } }
+}
+
+/**
+ * Empty implementation of getStaticPaths for on-demand only generation of static pages.
+ */
+const getStaticPaths: GetStaticPaths = () => ({
+  paths: [],
+  fallback: 'blocking',
+})
+
+export { getStaticProps, getStaticPaths }
 
 export default HomePage
