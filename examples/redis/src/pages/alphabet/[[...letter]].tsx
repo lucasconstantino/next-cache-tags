@@ -9,7 +9,7 @@ type Props = {
   letters: [Letter | null, Letter | null, Letter | null]
 }
 
-const HomePage: NextPage<Props> = ({ letters }) => {
+const AlphabetPage: NextPage<Props> = ({ letters }) => {
   const [previous, current, next] = letters
 
   const purgeLetter =
@@ -53,7 +53,7 @@ const HomePage: NextPage<Props> = ({ letters }) => {
             })}
           >
             <Link
-              href={current === letter ? '/' : `/${letter}`}
+              href={`/alphabet/${current === letter ? '' : letter}`}
               onClick={purgeLetter(letter)}
             >
               {letter}
@@ -93,4 +93,4 @@ const getStaticPaths: GetStaticPaths = () => ({
 
 export { getStaticProps, getStaticPaths }
 
-export default HomePage
+export default AlphabetPage
