@@ -2,7 +2,6 @@
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
   "include": ["src"],
   "compilerOptions": {
-    "module": "esnext",
     "target": "es2015",
     "lib": ["dom", "esnext"],
     "importHelpers": true,
@@ -12,7 +11,6 @@
     "sourceMap": true,
     // match output dir to input dir. e.g. dist/index instead of dist/src/index
     "rootDir": "./src",
-    "outDir": "./dist",
     // stricter type-checking for stronger correctness. Recommended by TS
     "strict": true,
     // linter checks for common issues

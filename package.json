@@ -3,15 +3,18 @@
   "version": "0.1.0",
   "license": "MIT",
   "author": "Lucas Constantino Silva",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esm/index.js",
+  "typings": "dist/esm/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "tsc",
+    "build:commonjs": "tsc --module commonjs --outDir dist/commonjs",
+    "build:esm": "tsc --module esnext --outDir dist/esm",
+    "build": "yarn build:commonjs && yarn build:esm",
     "prebuild": "yarn clean",
     "test": "jest src --passWithNoTests",
     "type-check": "tsc",
