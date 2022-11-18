@@ -27,4 +27,4 @@ export const alphabet = [
   'Z',
 ] as const
 
-export type Letter = typeof alphabet[number]
+export type TLetter = typeof alphabet[number]

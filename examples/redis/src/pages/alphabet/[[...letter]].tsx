@@ -2,42 +2,35 @@ import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import Link from 'next/link'
 import classnames from 'classnames'
 import { alphabet } from '~/lib/alphabet'
-import type { Letter } from '~/lib/alphabet'
+import type { TLetter } from '~/lib/alphabet'
 import { cacheTags } from '~/lib/cache-tags'
 
-type Props = {
-  letters: [Letter | null, Letter | null, Letter | null]
+type TProps = {
+  letters: [TLetter | null, TLetter | null, TLetter | null]
 }
 
-const AlphabetPage: NextPage<Props> = ({ letters }) => {
-  const [previous, current, next] = letters
-
-  const purgeLetter =
-    (letter: Letter): React.MouseEventHandler =>
-    (e) => {
-      // Cmd/Ctrl is pressed
-      if (e.metaKey) {
-        e.preventDefault()
-      }
+const handleLetterClick =
+  (letter: TLetter): React.MouseEventHandler =>
+  (e) => {
+    // Cmd/Ctrl is pressed
+    if (e.metaKey) {
+      e.preventDefault()
     }
+  }
+
+const AlphabetPage: NextPage<TProps> = ({ letters }) => {
+  const [previous, current, next] = letters
 
   return (
     <div>
       <h1>Cache Tags Alphabet</h1>
 
-      <p>
-        Every letter has a page. Every page depends on the letter, and it's
-        sibling letters.
-      </p>
+      <p>Every letter has a page. Every page depends on the letter, and it's sibling letters.</p>
 
       <p>
-        <strong>
-          1) Click a letter to navigate to it's page (shows underlined)
-        </strong>
+        <strong>1) Click a letter to navigate to it's page (shows underlined)</strong>
         <br />
-        <strong>
-          2) Cmd+click a letter to renew the cache of all related letter pages.
-        </strong>
+        <strong>2) Cmd+click a letter to renew the cache of all related letter pages.</strong>
         <br />
         <strong>3) Click on the current letter to navigate to home</strong>
       </p>
@@ -54,7 +47,7 @@ const AlphabetPage: NextPage<Props> = ({ letters }) => {
           >
             <Link
               href={`/alphabet/${current === letter ? '' : letter}`}
-              onClick={purgeLetter(letter)}
+              onClick={handleLetterClick(letter)}
             >
               {letter}
             </Link>
@@ -65,16 +58,16 @@ const AlphabetPage: NextPage<Props> = ({ letters }) => {
   )
 }
 
-const getStaticProps: GetStaticProps<Props, { letter?: [Letter] }> = (ctx) => {
-  const curr = (ctx.params?.letter?.[0]?.toUpperCase() ?? null) as Letter | null
+const getStaticProps: GetStaticProps<TProps, { letter?: [TLetter] }> = (ctx) => {
+  const curr = (ctx.params?.letter?.[0]?.toUpperCase() ?? null) as TLetter | null
   const prev = (curr && alphabet[alphabet.indexOf(curr) - 1]) ?? null
   const next = (curr && alphabet[alphabet.indexOf(curr) + 1]) ?? null
 
   // All letters relevant to this page
-  const letters = [prev, curr, next] as Props['letters']
+  const letters = [prev, curr, next] as TProps['letters']
 
   // Path to current page. Next.js does not provide it anywhere.
-  const path = `/${curr ?? ''}`
+  const path = `/alphabet/${curr ?? ''}`
   const tags = letters.filter(Boolean).map((letter) => `letter:${letter}`)
 
   // Register tags for this page.
