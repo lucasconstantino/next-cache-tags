@@ -24,7 +24,7 @@ const maxAge = 60 // 1 minute
  * Resolve a color based on cache age, from green (recent) to red (old).
  */
 const getColor = (age: number | null) => {
-  if (!age) {
+  if (age === null) {
     return 'black'
   }
 
