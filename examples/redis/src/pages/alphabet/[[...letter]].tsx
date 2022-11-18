@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import { alphabet } from '~/lib/alphabet'
 import type { TLetter } from '~/lib/alphabet'
 import { cacheTags } from '~/lib/cache-tags'
+import { useCacheMeta } from '~/hooks/useCacheMeta'
 import { Letter } from '~/components/Letter'
 
 type TProps = {
@@ -11,6 +12,7 @@ type TProps = {
 }
 
 const AlphabetPage: NextPage<TProps> = ({ letters }) => {
+  const cache = useCacheMeta()
   const [previous, current, next] = letters
 
   return (
@@ -31,6 +33,7 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
         {alphabet.map((letter) => (
           <li key={letter}>
             <Letter
+              cache={cache[`/alphabet/${letter}`]}
               letter={letter}
               isCurrent={letter === current}
               isPrevious={letter === previous}
