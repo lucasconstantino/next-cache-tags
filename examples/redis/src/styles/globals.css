@@ -40,6 +40,11 @@ a {
   align-items: center;
 }
 
+#alphabet .letter {
+  --time-color: initial;
+  color: var(--time-color);
+}
+
 #alphabet .letter > small {
   position: absolute;
   bottom: 0em;
