@@ -2,7 +2,7 @@ import Link from 'next/link'
 import classnames from 'classnames'
 
 import type { TLetter } from '~/lib/alphabet'
-import React from 'react'
+import { memo } from 'react'
 import { useCacheAge } from '~/hooks/useCacheAge'
 
 type TProps = {
@@ -57,4 +57,6 @@ const Letter: React.FC<TProps> = ({ letter, isCurrent, isPrevious, isNext, cache
   )
 }
 
-export { Letter }
+const MemoizedLetter = memo(Letter)
+
+export { MemoizedLetter as Letter }
