@@ -7,6 +7,7 @@ import { cacheTags } from '~/lib/cache-tags'
 import { useCacheMeta } from '~/hooks/useCacheMeta'
 import { CacheStatus } from '~/components/CacheStatus'
 import { Letter } from '~/components/Letter'
+import { useCmdPressed } from '~/hooks/useCmdPressed'
 
 type TProps = {
   letters: [TLetter | null, TLetter | null, TLetter | null]
@@ -14,6 +15,7 @@ type TProps = {
 
 const AlphabetPage: NextPage<TProps> = ({ letters }) => {
   const cache = useCacheMeta()
+  const isCmdPressed = useCmdPressed()
   const [previous, current, next] = letters
 
   return (
@@ -30,7 +32,7 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
         <strong>3) Click on the current letter to navigate to home</strong>
       </p>
 
-      <ul id="alphabet" className={classnames({ hasCurrent: !!current })}>
+      <ul id="alphabet" className={classnames({ hasCurrent: !!current, isCmdPressed })}>
         {alphabet.map((letter) => (
           <li key={letter}>
             <Letter
