@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "classnames": "^2.3.2",
     "next": "13.0.3",
     "next-cache-tags": "../../",
     "react": "18.2.0",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@types/react": "18.0.25",
+    "prettier": "^2.7.1",
     "typescript": "4.9.3"
   }
 }
