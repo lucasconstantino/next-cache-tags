@@ -4,8 +4,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   text-align: center;
 }
 
@@ -38,15 +38,13 @@ a {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-
-  cursor: pointer;
 }
 
-#alphabet.hasCurrent > li:not(.highlighted) {
+#alphabet.hasCurrent .letter:not(.highlighted) {
   color: #ddd;
 }
 
-#alphabet > li a::after {
+#alphabet .letter::after {
   content: '';
   position: absolute;
   z-index: -1;
@@ -63,11 +61,11 @@ a {
   transition: 250ms;
 }
 
-#alphabet > li a:hover::after {
+#alphabet .letter:hover::after {
   height: 150%;
   width: 150%;
 }
 
-#alphabet > li.current a {
+#alphabet .letter.current {
   text-decoration: underline;
 }

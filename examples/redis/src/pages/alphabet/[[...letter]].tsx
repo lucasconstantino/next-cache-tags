@@ -1,22 +1,14 @@
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
-import Link from 'next/link'
 import classnames from 'classnames'
+
 import { alphabet } from '~/lib/alphabet'
 import type { TLetter } from '~/lib/alphabet'
 import { cacheTags } from '~/lib/cache-tags'
+import { Letter } from '~/components/Letter'
 
 type TProps = {
   letters: [TLetter | null, TLetter | null, TLetter | null]
 }
-
-const handleLetterClick =
-  (letter: TLetter): React.MouseEventHandler =>
-  (e) => {
-    // Cmd/Ctrl is pressed
-    if (e.metaKey) {
-      e.preventDefault()
-    }
-  }
 
 const AlphabetPage: NextPage<TProps> = ({ letters }) => {
   const [previous, current, next] = letters
@@ -37,20 +29,13 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
 
       <ul id="alphabet" className={classnames({ hasCurrent: !!current })}>
         {alphabet.map((letter) => (
-          <li
-            key={letter}
-            tabIndex={1}
-            className={classnames({
-              highlighted: [previous, current, next].includes(letter),
-              current: current === letter,
-            })}
-          >
-            <Link
-              href={`/alphabet/${current === letter ? '' : letter}`}
-              onClick={handleLetterClick(letter)}
-            >
-              {letter}
-            </Link>
+          <li key={letter}>
+            <Letter
+              letter={letter}
+              isCurrent={letter === current}
+              isPrevious={letter === previous}
+              isNext={letter === next}
+            />
           </li>
         ))}
       </ul>
