@@ -57,7 +57,12 @@ a {
   transition: all 250ms;
 }
 
-#alphabet .letter:hover > small {
+#alphabet:not(.isCmdPressed) .letter:hover .age {
+  bottom: -2em;
+  opacity: 1;
+}
+
+#alphabet.isCmdPressed .letter:hover .invalidate {
   bottom: -2em;
   opacity: 1;
 }

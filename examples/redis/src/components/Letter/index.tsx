@@ -37,7 +37,8 @@ const Letter: React.FC<TProps> = ({ letter, isCurrent, isPrevious, isNext, cache
       })}
     >
       {letter}
-      <small>{age ? `${age}s` : 'empty'}</small>
+      <small className="age">{age ? `${age}s` : 'empty'}</small>
+      <small className="invalidate">invalidate</small>
     </Link>
   )
 }
