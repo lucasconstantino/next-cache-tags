@@ -5,6 +5,7 @@ import { alphabet } from '~/lib/alphabet'
 import type { TLetter } from '~/lib/alphabet'
 import { cacheTags } from '~/lib/cache-tags'
 import { useCacheMeta } from '~/hooks/useCacheMeta'
+import { CacheStatus } from '~/components/CacheStatus'
 import { Letter } from '~/components/Letter'
 
 type TProps = {
@@ -42,6 +43,8 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
           </li>
         ))}
       </ul>
+
+      <CacheStatus cache={cache} />
     </div>
   )
 }

@@ -91,3 +91,31 @@ a {
 #alphabet .letter.current {
   text-decoration: underline;
 }
+
+#cache-status {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  padding: 1rem;
+  font-family: monospace;
+  background: #eee;
+  border: 1px solid #ccc;
+}
+
+#cache-status h3 {
+  margin: 0 0 1em;
+}
+
+#cache-status ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cache-status-item {
+  --time-color: initial;
+}
+
+.cache-status-item > strong {
+  color: var(--time-color);
+}
