@@ -40,6 +40,23 @@ a {
   align-items: center;
 }
 
+#alphabet .letter > small {
+  position: absolute;
+  bottom: 0em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: monospace;
+  font-size: 1rem;
+  color: initial;
+  opacity: 0;
+  transition: all 250ms;
+}
+
+#alphabet .letter:hover > small {
+  bottom: -2em;
+  opacity: 1;
+}
+
 #alphabet.hasCurrent .letter:not(.highlighted) {
   color: #ddd;
 }
