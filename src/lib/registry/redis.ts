@@ -1,4 +1,4 @@
-import {
+import type {
   RedisClientType,
   RedisClientOptions,
   RedisModules,
@@ -68,7 +68,7 @@ class RedisCacheTagsRegistry<
       // Dispatch deletion.
       void this.client.DEL(tag)
 
-      return (paths as any) as string[]
+      return paths as any as string[]
     })
 }
 

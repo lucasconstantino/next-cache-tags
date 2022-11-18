@@ -1,5 +1,5 @@
-import * as Next from 'next'
-import { CacheTagsRegistry } from './registry/base'
+import type * as Next from 'next'
+import type { CacheTagsRegistry } from './registry/base'
 import { defaultGenerateHash, noHash } from './hash'
 
 type Config<R extends CacheTagsRegistry> = {
@@ -120,6 +120,6 @@ class CacheTags<R extends CacheTagsRegistry> {
 }
 
 // Expose tags resolver so that it can be easily extended.
-export { TagsResolver }
+export type { TagsResolver }
 
 export { CacheTags }

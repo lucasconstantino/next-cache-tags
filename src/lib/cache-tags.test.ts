@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http'
 import { CacheTags } from './cache-tags'
-import { TagsResolver } from './cache-tags'
+import type { TagsResolver } from './cache-tags'
 import { MemoryCacheTagsRegistry } from './registry/memory'
 
 describe('CacheTags', () => {
@@ -26,7 +26,7 @@ describe('CacheTags', () => {
   })
 
   describe('invalidator', () => {
-    const resolver: TagsResolver = jest.fn(req => [req.query.tag as string])
+    const resolver: TagsResolver = jest.fn((req) => [req.query.tag as string])
 
     it('should create a handler function', () => {
       const cacheTags = new CacheTags({ registry })
