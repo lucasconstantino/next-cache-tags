@@ -28,7 +28,7 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
       <main>
         <h1>Cache Tags Alphabet</h1>
 
-        <p>Every letter has a page. Every page depends on the letter, and it's sibling letters.</p>
+        <p>Every letter has a page. Every page depends on the letter and it's sibling letters.</p>
 
         <p>
           <strong>1) Click a letter to navigate to it's page (shows underlined)</strong>
