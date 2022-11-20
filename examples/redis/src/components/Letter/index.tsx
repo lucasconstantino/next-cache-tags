@@ -1,35 +1,44 @@
+import { memo } from 'react'
 import Link from 'next/link'
 import classnames from 'classnames'
 
 import type { TLetter } from '~/lib/alphabet'
-import { memo } from 'react'
 import { useCacheAge } from '~/hooks/useCacheAge'
 import { useAgeColor } from '~/hooks/useAgeColor'
+import type { TCacheInfo, TCacheKey } from '~/hooks/useCacheInfo'
 
 type TProps = {
   letter: TLetter
   isCurrent: boolean
   isPrevious: boolean
   isNext: boolean
-  cache: Date | undefined
+  cacheInfo: TCacheInfo
 }
 
-/**
- * Performs an invalidation of a letter cache-tag.
- */
-const invalidate = (letter: TLetter) => navigator.sendBeacon(`/api/invalidate?tag=letter:${letter}`)
+const Letter: React.FC<TProps> = ({ letter, isCurrent, isPrevious, isNext, cacheInfo }) => {
+  const url: TCacheKey = `/alphabet/${letter}`
 
-const Letter: React.FC<TProps> = ({ letter, isCurrent, isPrevious, isNext, cache }) => {
-  const age = useCacheAge(cache)
+  const age = useCacheAge(cacheInfo.cache[url])
   const color = useAgeColor(age)
+
+  const href = `/alphabet/${isCurrent ? '' : letter}`
   const style = { '--time-color': color } as React.CSSProperties
+
+  /**
+   * Invalidate (instead of navigate) if cmd/ctrl is pressed upon clicking.
+   */
+  const handleOnClick = async (e: React.MouseEvent) => {
+    if (e.metaKey) {
+      e.preventDefault()
+      cacheInfo.invalidate(letter)
+    }
+  }
 
   return (
     <Link
       // Navigate to home if current letter is clicked.
-      href={`/alphabet/${isCurrent ? '' : letter}`}
-      // Invalidate (instead of navigate) if cmd/ctrl is pressed upon clicking.
-      onClick={(e: React.MouseEvent) => e.metaKey && (e.preventDefault(), invalidate(letter))}
+      href={href}
+      onClick={handleOnClick}
       style={style}
       className={classnames('letter', {
         current: isCurrent,
