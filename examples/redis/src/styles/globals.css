@@ -20,6 +20,8 @@ a {
 
 #page {
   display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
 #page > aside {
@@ -28,6 +30,7 @@ a {
 
 #page > main {
   flex-grow: 1;
+  overflow: auto;
 }
 
 #alphabet {
