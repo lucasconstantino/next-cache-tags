@@ -19,34 +19,38 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
   const [previous, current, next] = letters
 
   return (
-    <div>
-      <h1>Cache Tags Alphabet</h1>
+    <div id="page">
+      <aside>
+        <CacheStatus cache={cache} />
+      </aside>
 
-      <p>Every letter has a page. Every page depends on the letter, and it's sibling letters.</p>
+      <main>
+        <h1>Cache Tags Alphabet</h1>
 
-      <p>
-        <strong>1) Click a letter to navigate to it's page (shows underlined)</strong>
-        <br />
-        <strong>2) Cmd+click a letter to renew the cache of all related letter pages.</strong>
-        <br />
-        <strong>3) Click on the current letter to navigate to home</strong>
-      </p>
+        <p>Every letter has a page. Every page depends on the letter, and it's sibling letters.</p>
 
-      <ul id="alphabet" className={classnames({ hasCurrent: !!current, isCmdPressed })}>
-        {alphabet.map((letter) => (
-          <li key={letter}>
-            <Letter
-              cache={cache[`/alphabet/${letter}`]}
-              letter={letter}
-              isCurrent={letter === current}
-              isPrevious={letter === previous}
-              isNext={letter === next}
-            />
-          </li>
-        ))}
-      </ul>
+        <p>
+          <strong>1) Click a letter to navigate to it's page (shows underlined)</strong>
+          <br />
+          <strong>2) Cmd+click a letter to renew the cache of all related letter pages.</strong>
+          <br />
+          <strong>3) Click on the current letter to navigate to home</strong>
+        </p>
 
-      <CacheStatus cache={cache} />
+        <ul id="alphabet" className={classnames({ hasCurrent: !!current, isCmdPressed })}>
+          {alphabet.map((letter) => (
+            <li key={letter}>
+              <Letter
+                cache={cache[`/alphabet/${letter}`]}
+                letter={letter}
+                isCurrent={letter === current}
+                isPrevious={letter === previous}
+                isNext={letter === next}
+              />
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   )
 }

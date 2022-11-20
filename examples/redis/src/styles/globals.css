@@ -18,6 +18,18 @@ a {
   box-sizing: border-box;
 }
 
+#page {
+  display: flex;
+}
+
+#page > aside {
+  padding: 1rem;
+}
+
+#page > main {
+  flex-grow: 1;
+}
+
 #alphabet {
   margin: 0 auto;
   padding: 0;
@@ -98,9 +110,6 @@ a {
 }
 
 #cache-status {
-  position: fixed;
-  left: 1rem;
-  top: 1rem;
   padding: 1rem;
   width: 16rem;
   border: 1px solid #ccc;
@@ -117,6 +126,7 @@ a {
   padding: 0;
   list-style: none;
   text-align: left;
+  overflow: auto;
 }
 
 .cache-status-item {
