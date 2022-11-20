@@ -1,7 +1,7 @@
 /**
  * Resolve a color based on cache age, from green (recent) to red (old).
  */
-const useAgeColor = (age: number | null, maxAge = 60) => {
+const useAgeColor = (age: number | null, maxAge = 20) => {
   if (age === null) {
     return 'black'
   }
