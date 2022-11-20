@@ -30,7 +30,7 @@ describe('CacheTags', () => {
 
     it('should create a handler function', () => {
       const cacheTags = new CacheTags({ registry })
-      const invalidator = cacheTags.invalidator(resolver)
+      const invalidator = cacheTags.invalidator({ resolver })
 
       expect(invalidator).toBeInstanceOf(Function)
     })
@@ -38,7 +38,7 @@ describe('CacheTags', () => {
     it('should execute tags resolver upon invokation', async () => {
       const resolver: TagsResolver = jest.fn(() => [])
       const cacheTags = new CacheTags({ registry })
-      const invalidator = cacheTags.invalidator(resolver)
+      const invalidator = cacheTags.invalidator({ resolver })
 
       const { req, res } = createMocks()
       await invalidator(req, res)
@@ -50,7 +50,7 @@ describe('CacheTags', () => {
       const resolver = () => ['some-tag']
       const generateHash = jest.fn(() => 'some-hash')
       const cacheTags = new CacheTags({ registry, generateHash })
-      const invalidator = cacheTags.invalidator(resolver)
+      const invalidator = cacheTags.invalidator({ resolver })
 
       const { req, res } = createMocks()
       await invalidator(req, res)
@@ -62,7 +62,7 @@ describe('CacheTags', () => {
       const resolver = () => ['first', 'second']
       const generateHash = jest.fn(() => 'some-hash')
       const cacheTags = new CacheTags({ registry, generateHash })
-      const invalidator = cacheTags.invalidator(resolver)
+      const invalidator = cacheTags.invalidator({ resolver })
 
       const { req, res } = createMocks()
       await invalidator(req, res)
@@ -73,7 +73,7 @@ describe('CacheTags', () => {
 
     it('should execute revalidation for related paths', async () => {
       const cacheTags = new CacheTags({ registry, generateHash: false })
-      const invalidator = cacheTags.invalidator(resolver)
+      const invalidator = cacheTags.invalidator({ resolver })
 
       cacheTags.registry.register('/some-path', ['tag-1', 'tag-2'])
       cacheTags.registry.register('/other-path', ['tag-1'])

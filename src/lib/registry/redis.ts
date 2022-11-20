@@ -18,7 +18,7 @@ class RedisCacheTagsRegistry<
 > extends CacheTagsRegistry {
   private client: RedisClientType<M, F, S>
   private acting = 0
-  private connecting: Promise<void> | null = null
+  private connecting?: Promise<void>
 
   constructor(config: RedisClientOptions<M, F, S>) {
     super()
@@ -39,9 +39,9 @@ class RedisCacheTagsRegistry<
     const result = await action(this.client)
 
     // Only disconnect on last action.
-    if (--this.acting === 0) {
-      this.connecting = null
-      await this.client.disconnect()
+    if (--this.acting === 0 && this.client.isOpen) {
+      delete this.connecting
+      await this.client.quit()
     }
 
     return result

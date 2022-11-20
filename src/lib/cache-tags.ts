@@ -25,6 +25,39 @@ interface TagsResolver {
     | string[]
 }
 
+type InvalidatorConfig = {
+  /**
+   * Wheter the invalidator route should wait for it to operate.
+   *
+   * Defaults to false, and should be used carefully not to exceed lambda execution time limit.
+   */
+  wait?: boolean
+
+  /**
+   * Cache-tags resolver for an upcoming invalidation call.
+   */
+  resolver: TagsResolver
+
+  /**
+   * Controls how the API Route should be resolved in case of invalidation success.
+   */
+  onSuccess?: (
+    req: Parameters<TagsResolver>[0],
+    res: Parameters<TagsResolver>[1],
+    tags: string[]
+  ) => Promise<void> | void
+
+  /**
+   * Controls how the API Route should be resolved in case of invalidation error.
+   */
+  onError?: (
+    error: any,
+    req: Parameters<TagsResolver>[0],
+    res: Parameters<TagsResolver>[1],
+    tags?: string[]
+  ) => Promise<void> | void
+}
+
 /**
  * Cache-tags service for Next.js.
  */
@@ -59,42 +92,24 @@ class CacheTags<R extends CacheTagsRegistry> {
   /**
    * Generates a Next.js API Route for cache-tag invalidation.
    */
-  public invalidator(
-    /**
-     * Cache-tags resolver for an upcoming invalidation call.
-     */
-    resolver: TagsResolver,
-
-    /**
-     * Controls how the API Route should be resolved in case of invalidation success.
-     */
-    onSuccess: (
-      req: Parameters<TagsResolver>[0],
-      res: Parameters<TagsResolver>[1],
-      tags: string[]
-    ) => Promise<void> | void = (_req, res) => res.send('ok'),
-
-    /**
-     * Controls how the API Route should be resolved in case of invalidation error.
-     */
-    onError: (
-      error: any,
-      req: Parameters<TagsResolver>[0],
-      res: Parameters<TagsResolver>[1],
-      tags?: string[]
-    ) => Promise<void> | void = (error, _req, res) => {
+  public invalidator({
+    wait = false,
+    resolver,
+    onSuccess = (_req, res) => res.send('ok'),
+    onError = (error, _req, res) => {
       console.error(error)
       res.status(500).json({
         message: error instanceof Error ? error.message : 'Unknown error',
       })
-    }
-  ): Next.NextApiHandler {
+    },
+  }: InvalidatorConfig): Next.NextApiHandler {
     return async (req, res) => {
       let tags: string[] | undefined = undefined
 
       try {
         // Retrieves tags
         const tags = await resolver(req, res)
+        const invalidating: Array<Promise<void>> = []
 
         for (const tag of tags) {
           this.log && console.log(`[next-cache-tags] Invalidating "${tag}":`)
@@ -107,8 +122,12 @@ class CacheTags<R extends CacheTagsRegistry> {
             this.log && console.log(`  - ${path}`)
 
             // Dispatch revalidation.
-            void res.revalidate(path)
+            invalidating.push(res.revalidate(path))
           }
+        }
+
+        if (wait) {
+          await Promise.allSettled(invalidating)
         }
 
         await onSuccess(req, res, tags)
