@@ -102,9 +102,10 @@ a {
   left: 1rem;
   top: 1rem;
   padding: 1rem;
+  width: 16rem;
+  border: 1px solid #ccc;
   font-family: monospace;
   background: #eee;
-  border: 1px solid #ccc;
 }
 
 #cache-status h3 {
@@ -115,10 +116,12 @@ a {
   margin: 0;
   padding: 0;
   list-style: none;
+  text-align: left;
 }
 
 .cache-status-item {
   --time-color: initial;
+  transition: opacity 250ms;
 }
 
 .cache-status-item > strong {
