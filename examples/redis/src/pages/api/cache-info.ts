@@ -2,7 +2,7 @@ import type { NextApiHandler } from 'next'
 import { cacheTags } from '~/lib/cache-tags'
 
 /**
- * Load cache-tags and time maps from Redis.
+ * Load current cache info from Redis.
  */
 const handler: NextApiHandler = async (_req, res) =>
   await cacheTags.registry.act(async (client) => {
@@ -14,10 +14,7 @@ const handler: NextApiHandler = async (_req, res) =>
       transaction.HGETALL(tag)
     }
 
-    const result = (await transaction.exec()) as unknown[] as Record<
-      string,
-      string
-    >[]
+    const result = (await transaction.exec()) as unknown[] as Record<string, string>[]
 
     for (const hashes of result) {
       for (const path in hashes) {

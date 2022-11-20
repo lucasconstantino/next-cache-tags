@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { alphabet } from '~/lib/alphabet'
 import type { TLetter } from '~/lib/alphabet'
 import { cacheTags } from '~/lib/cache-tags'
-import { useCacheMeta } from '~/hooks/useCacheMeta'
+import { useCacheInfo } from '~/hooks/useCacheInfo'
 import { CacheStatus } from '~/components/CacheStatus'
 import { Letter } from '~/components/Letter'
 import { useCmdPressed } from '~/hooks/useCmdPressed'
@@ -14,14 +14,14 @@ type TProps = {
 }
 
 const AlphabetPage: NextPage<TProps> = ({ letters }) => {
-  const cache = useCacheMeta()
+  const cacheInfo = useCacheInfo()
   const isCmdPressed = useCmdPressed()
   const [previous, current, next] = letters
 
   return (
     <div id="page">
       <aside>
-        <CacheStatus cache={cache} />
+        <CacheStatus cacheInfo={cacheInfo} />
       </aside>
 
       <main>
@@ -41,7 +41,7 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
           {alphabet.map((letter) => (
             <li key={letter}>
               <Letter
-                cache={cache[`/alphabet/${letter}`]}
+                cache={cacheInfo.cache[`/alphabet/${letter}`]}
                 letter={letter}
                 isCurrent={letter === current}
                 isPrevious={letter === previous}
