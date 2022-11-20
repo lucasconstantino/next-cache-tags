@@ -4,8 +4,9 @@ import classnames from 'classnames'
 import { alphabet } from '~/lib/alphabet'
 import type { TLetter } from '~/lib/alphabet'
 import { cacheTags } from '~/lib/cache-tags'
-import { useCacheInfo } from '~/hooks/useCacheInfo'
+import { useCacheInfo, createCacheTag } from '~/hooks/useCacheInfo'
 import { CacheStatus } from '~/components/CacheStatus'
+import { CacheUpdater } from '~/components/CacheUpdater'
 import { Letter } from '~/components/Letter'
 import { useCmdPressed } from '~/hooks/useCmdPressed'
 
@@ -41,8 +42,8 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
           {alphabet.map((letter) => (
             <li key={letter}>
               <Letter
-                cache={cacheInfo.cache[`/alphabet/${letter}`]}
                 letter={letter}
+                cacheInfo={cacheInfo}
                 isCurrent={letter === current}
                 isPrevious={letter === previous}
                 isNext={letter === next}
@@ -51,6 +52,10 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
           ))}
         </ul>
       </main>
+
+      <aside>
+        <CacheUpdater cacheInfo={cacheInfo} frequency={5000} />
+      </aside>
     </div>
   )
 }
@@ -65,7 +70,7 @@ const getStaticProps: GetStaticProps<TProps, { letter?: [TLetter] }> = (ctx) => 
 
   // Path to current page. Next.js does not provide it anywhere.
   const path = `/alphabet/${curr ?? ''}`
-  const tags = letters.filter(Boolean).map((letter) => `letter:${letter}`)
+  const tags = letters.filter(Boolean).map(createCacheTag)
 
   // Register tags for this page.
   cacheTags.register(path, tags)
