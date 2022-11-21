@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "yarn clear-cache-tags && next build",
     "start": "next start",
     "clear-cache-tags": "node scripts/clear-cache-tags.js"
   },
