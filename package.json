@@ -1,6 +1,6 @@
 {
   "name": "next-cache-tags",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "author": "Lucas Constantino Silva",
   "main": "dist/commonjs/index.js",
