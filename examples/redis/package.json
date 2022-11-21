@@ -17,6 +17,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@types/node": "^18.11.9",
     "@types/react": "18.0.25",
     "dotenv": "^16.0.3",
     "prettier": "^2.7.1",
