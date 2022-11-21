@@ -189,10 +189,10 @@ nanoid@^3.3.4:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
   integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
 
-next-cache-tags@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/next-cache-tags/-/next-cache-tags-0.1.0.tgz#6479727d5f14c6b32e7fa3e6ca65cd1872715fec"
-  integrity sha512-R8NNkqkJIsqTJVqRLLrkBgStC+7Jl45Rb3KicPo62wRtBuw847tUVHNqPi94Nwtdq6oANNuE3JTfyuE5JdM1ng==
+next-cache-tags@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/next-cache-tags/-/next-cache-tags-0.1.1.tgz#5c99b7ffb259d17ffb941118f803856c44777fe9"
+  integrity sha512-hkJmi4pkup9WhHnmsOtRXf0EXGF3Mvqr9iWgB9OkscJZ71DZQ3Oj8B1++gIhEe6K7MJDqorhJZha8iuhwwgBNQ==
 
 next@13.0.3:
   version "13.0.3"
