@@ -21,6 +21,7 @@ const Letter: React.FC<TProps> = ({ letter, isCurrent, isPrevious, isNext, cache
   const age = useCacheAge(cacheInfo.cache[url])
   const color = useAgeColor(age)
 
+  // Navigate to home if current letter is clicked.
   const href = `/alphabet/${isCurrent ? '' : letter}`
   const style = { '--time-color': color } as React.CSSProperties
 
@@ -35,19 +36,19 @@ const Letter: React.FC<TProps> = ({ letter, isCurrent, isPrevious, isNext, cache
   }
 
   return (
-    <Link
-      // Navigate to home if current letter is clicked.
-      href={href}
-      onClick={handleOnClick}
-      style={style}
-      className={classnames('letter', {
-        current: isCurrent,
-        highlighted: isCurrent || isPrevious || isNext,
-      })}
-    >
-      {letter}
-      <small className="age">{age ? `${age}s` : 'empty'}</small>
-      <small className="invalidate">invalidate</small>
+    <Link href={href} passHref>
+      <a
+        onClick={handleOnClick}
+        style={style}
+        className={classnames('letter', {
+          current: isCurrent,
+          highlighted: isCurrent || isPrevious || isNext,
+        })}
+      >
+        {letter}
+        <small className="age">{age ? `${age}s` : 'empty'}</small>
+        <small className="invalidate">invalidate</small>
+      </a>
     </Link>
   )
 }
