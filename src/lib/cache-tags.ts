@@ -79,8 +79,9 @@ class CacheTags<R extends CacheTagsRegistry> {
    * Register a path/tags relationship.
    */
   public register(path: string, tags: string[]) {
-    const hashed = tags.map(this.generateHash)
+    const hashed = tags.map((tag) => this.generateHash(tag))
 
+    /* istanbul ignore next */
     if (this.log) {
       console.log(`[next-cache-tags] Regenerating ${path}:`)
       console.log(`  - Cache-tags: ${hashed.length}`)
@@ -126,6 +127,7 @@ class CacheTags<R extends CacheTagsRegistry> {
           }
         }
 
+        /* istanbul ignore next */
         if (wait) {
           await Promise.allSettled(invalidating)
         }
