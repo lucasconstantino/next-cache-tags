@@ -20,7 +20,7 @@
     "build": "yarn build:commonjs && yarn build:esm",
     "build:esm": "tsc --module esnext --outDir dist/esm",
     "build:commonjs": "tsc --module commonjs --outDir dist/commonjs",
-    "test": "jest src --passWithNoTests",
+    "test": "jest src --silent",
     "type-check": "tsc",
     "code-quality": "yarn test && yarn type-check",
     "prepare": "yarn build"
