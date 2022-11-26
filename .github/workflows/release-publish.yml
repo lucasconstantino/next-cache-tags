@@ -1,0 +1,28 @@
+# This workflow will be triggered after a GitHub release is marked as published.
+# This will ultimately trigger NPM package publishing.
+name: 'Release: Publish'
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Publish Package
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_ACCESS_TOKEN }}
