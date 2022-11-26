@@ -1,0 +1,44 @@
+# This workflow should be triggered manually,
+# through the GitHub UI at https://github.com/lucasconstantino/next-cache-tags/actions/workflows/release-create.yml
+name: 'Release: Create'
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish release? [yes/no]'
+        required: true
+        default: 'no'
+
+jobs:
+  release-create:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0 # Fetch all commits history, needed for changelog creation
+
+      - name: Create New Version
+        run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          npx standard-version
+
+      - name: Generate Release body
+        run: npx extract-changelog-release > RELEASE_BODY.md
+
+      - name: Push Changes and Tags
+        id: publish_tag
+        run: |
+          git push --follow-tags
+          echo ::set-output name=tag_name::$(git describe HEAD --abbrev=0)
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          release_name: ${{ steps.publish_tag.outputs.tag_name }}
+          tag_name: ${{ steps.publish_tag.outputs.tag_name }}
+          body_path: 'RELEASE_BODY.md'
+          draft: ${{ github.event.inputs.publish != 'yes' }}
