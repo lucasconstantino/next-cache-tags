@@ -1,0 +1,24 @@
+name: Continuous Integration
+
+on: [pull_request]
+
+jobs:
+  ci:
+    name: Code Quality
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Run Code Quality
+        run: yarn code-quality
