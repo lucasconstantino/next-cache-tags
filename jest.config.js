@@ -4,4 +4,5 @@ module.exports = {
     '^.+\\.ts$': ['ts-jest', { isolatedModules: true }],
   },
   testEnvironment: 'node',
+  collectCoverage: true,
 }
