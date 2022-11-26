@@ -16,7 +16,7 @@
     "build:esm": "tsc --module esnext --outDir dist/esm",
     "build": "yarn build:commonjs && yarn build:esm",
     "prebuild": "yarn clean",
-    "test": "jest src --passWithNoTests",
+    "test": "jest src --silent",
     "type-check": "tsc",
     "code-quality": "yarn test && yarn type-check",
     "prepare": "yarn build",
