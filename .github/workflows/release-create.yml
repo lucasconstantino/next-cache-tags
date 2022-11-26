@@ -14,11 +14,19 @@ jobs:
   release-create:
     runs-on: ubuntu-20.04
     steps:
+      - name: Generate Authentication Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v1
+        with:
+          application_id: ${{ secrets.AUTHORIZER_APPLICATION_ID }}
+          application_private_key: ${{ secrets.AUTHORIZER_APPLICATION_PRIVATE_KEY }}
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
           ref: main
           fetch-depth: 0 # Fetch all commits history, needed for changelog creation
+          token: ${{ steps.get_workflow_token.outputs.token }}
 
       - name: Create New Version
         run: |
@@ -42,3 +50,5 @@ jobs:
           tag_name: ${{ steps.publish_tag.outputs.tag_name }}
           body_path: 'RELEASE_BODY.md'
           draft: ${{ github.event.inputs.publish != 'yes' }}
+        env:
+          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
