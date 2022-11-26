@@ -19,8 +19,11 @@ jobs:
           node-version: latest
           cache: yarn
 
-      - name: Install Dependencies
+      - name: Install Dependencies & Build
         run: yarn install
+
+      - name: Run Tests
+        run: yarn test
 
       - name: Publish Package
         uses: JS-DevTools/npm-publish@v1
