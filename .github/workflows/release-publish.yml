@@ -19,8 +19,16 @@ jobs:
           node-version: latest
           cache: yarn
 
-      - name: Install Dependencies
+      - name: Install Dependencies & Build
         run: yarn install
+
+      - name: Run Tests
+        run: yarn test
+
+      - name: Upload Code Coverage
+        uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
       - name: Publish Package
         uses: JS-DevTools/npm-publish@v1
