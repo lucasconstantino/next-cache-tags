@@ -1,13 +1,12 @@
-import { CacheTagsRegistry } from './base'
+import { CacheTagsRegistry } from './type'
 
 /**
  * A Cache-Tags registry implemented using memory, for testing purposes.
  */
-class MemoryCacheTagsRegistry extends CacheTagsRegistry {
+class MemoryCacheTagsRegistry implements CacheTagsRegistry {
   private store: Map<string, Map<string, boolean>>
 
   constructor() {
-    super()
     this.store = new Map()
   }
 

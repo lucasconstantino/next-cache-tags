@@ -1,5 +1,5 @@
 export { defaultGenerateHash } from './lib/hash'
-export { CacheTagsRegistry } from './lib/registry/base'
+export { CacheTagsRegistry } from './lib/registry/type'
 export { MemoryCacheTagsRegistry } from './lib/registry/memory'
 export { RedisCacheTagsRegistry } from './lib/registry/redis'
 export { CacheTags } from './lib/cache-tags'

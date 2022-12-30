@@ -1,5 +1,5 @@
 import type * as Next from 'next'
-import type { CacheTagsRegistry } from './registry/base'
+import type { CacheTagsRegistry } from './registry/type'
 import { defaultGenerateHash, noHash } from './hash'
 
 type Config<R extends CacheTagsRegistry> = {

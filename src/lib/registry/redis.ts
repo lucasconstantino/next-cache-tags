@@ -6,7 +6,7 @@ import type {
   RedisScripts,
 } from 'redis'
 import { createClient } from 'redis'
-import { CacheTagsRegistry } from './base'
+import { CacheTagsRegistry } from './type'
 
 /**
  * A Cache-Tags registry implemented using Redis.
@@ -15,14 +15,14 @@ class RedisCacheTagsRegistry<
   M extends RedisModules = RedisModules,
   F extends RedisFunctions = RedisFunctions,
   S extends RedisScripts = RedisScripts
-> extends CacheTagsRegistry {
+> implements CacheTagsRegistry
+{
   private client: RedisClientType<M, F, S>
   private acting = 0
   private connecting?: Promise<void>
   private disconnecting?: Promise<void>
 
   constructor(config: RedisClientOptions<M, F, S>) {
-    super()
     this.client = createClient(config)
   }
 
