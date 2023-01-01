@@ -1,6 +1,7 @@
 {
   "name": "next-cache-tags",
-  "version": "0.1.4",
+  "description": "Active ISR revalidation based on surrogate keys for Next.js",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/lucasconstantino/next-cache-tags.git"
