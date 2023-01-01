@@ -67,13 +67,10 @@ const getStaticProps: GetStaticProps<TProps, { letter?: [TLetter] }> = (ctx) => 
 
   // All letters relevant to this page
   const letters = [prev, curr, next] as TProps['letters']
-
-  // Path to current page. Next.js does not provide it anywhere.
-  const path = `/alphabet/${curr ?? ''}`
   const tags = letters.filter(Boolean).map(createCacheTag)
 
   // Register tags for this page.
-  cacheTags.register(path, tags)
+  cacheTags.register(ctx, tags)
 
   return { props: { letters: letters } }
 }
