@@ -1,4 +1,8 @@
 import type * as Next from 'next'
+import Router from 'next/router'
+import { resolveHref } from 'next/dist/shared/lib/router/router'
+
+import { get } from './stack'
 import type { CacheTagsRegistry } from './registry/type'
 import { defaultGenerateHash, noHash } from './hash'
 
@@ -58,6 +62,10 @@ type InvalidatorConfig = {
   ) => Promise<void> | void
 }
 
+const regex = {
+  pathname: /(pages|app)\/(?<pathname>.+)(\.index)?\.[tj]sx?$/u,
+}
+
 /**
  * Cache-tags service for Next.js.
  */
@@ -76,9 +84,38 @@ class CacheTags<R extends CacheTagsRegistry> {
   }
 
   /**
-   * Register a path/tags relationship.
+   * Predicate for getStaticProps call-site.
    */
-  public register(path: string, tags: string[]) {
+  private isGetStaticPropsTrace = (callSite: NodeJS.CallSite) =>
+    callSite.getFunctionName() === 'getStaticProps'
+
+  /**
+   * Resolve the current page's pathname from Next.js static props context info.
+   */
+  private getPagePathname(ctx: Next.GetStaticPropsContext) {
+    const stack = get()
+    const trace = stack.find(this.isGetStaticPropsTrace)
+    const path = trace?.getFileName() ?? trace?.getEvalOrigin()
+    const { pathname } = path?.match(regex.pathname)?.groups ?? {}
+
+    if (!pathname) {
+      throw new Error('Could not resolve page pathname')
+    }
+
+    return resolveHref(Router, { pathname, query: ctx.params }, true)[1]
+  }
+
+  /**
+   * Register tags into a Next.js extracted path.
+   */
+  public register(ctx: Next.GetStaticPropsContext, tags: string[]) {
+    return this.registerPath(this.getPagePathname(ctx), tags)
+  }
+
+  /**
+   * Register a tags/path relationship.
+   */
+  public registerPath(path: string, tags: string[]) {
     const hashed = tags.map((tag) => this.generateHash(tag))
 
     /* istanbul ignore next */

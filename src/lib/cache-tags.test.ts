@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { createMocks } from 'node-mocks-http'
+
 import { CacheTags } from './cache-tags'
 import type { TagsResolver } from './cache-tags'
-import { CacheTagsRegistry } from './registry/base'
+import { CacheTagsRegistry } from './registry/type'
 
 /**
  * Creates a mocked registry.
@@ -66,7 +67,7 @@ describe('CacheTags', () => {
   describe('::register', () => {
     it('should register a cache tags for a path', () => {
       const cacheTags = new CacheTags({ registry, generateHash: false })
-      cacheTags.register('/some-path', ['tag-1'])
+      cacheTags.registerPath('/some-path', ['tag-1'])
 
       expect(registry.register).toHaveBeenCalledWith('/some-path', ['tag-1'])
     })
@@ -75,7 +76,7 @@ describe('CacheTags', () => {
       const generateHash = jest.fn(() => 'hashed')
       const cacheTags = new CacheTags({ registry, generateHash })
 
-      cacheTags.register('/some-path', ['tag-1'])
+      cacheTags.registerPath('/some-path', ['tag-1'])
 
       expect(generateHash).toHaveBeenCalledWith('tag-1')
       expect(registry.register).toHaveBeenCalledWith('/some-path', ['hashed'])
@@ -120,9 +121,9 @@ describe('CacheTags', () => {
       const cacheTags = new CacheTags({ registry, generateHash: false })
       const invalidator = cacheTags.invalidator({ resolver })
 
-      cacheTags.register('/some-path', ['tag-1', 'tag-2'])
-      cacheTags.register('/other-path', ['tag-1'])
-      cacheTags.register('/unaffected-path', ['tag-3'])
+      cacheTags.registerPath('/some-path', ['tag-1', 'tag-2'])
+      cacheTags.registerPath('/other-path', ['tag-1'])
+      cacheTags.registerPath('/unaffected-path', ['tag-3'])
 
       const { req, res } = getNetworkMock({ query: { tag: 'tag-1' } })
 
@@ -137,7 +138,7 @@ describe('CacheTags', () => {
       const cacheTags = new CacheTags({ registry, generateHash: false })
       const invalidator = cacheTags.invalidator({ resolver, onSuccess })
 
-      cacheTags.register('/some-path', ['tag-1', 'tag-2'])
+      cacheTags.registerPath('/some-path', ['tag-1', 'tag-2'])
 
       const { req, res } = getNetworkMock({ query: { tag: 'tag-1' } })
 
@@ -160,8 +161,8 @@ describe('CacheTags', () => {
 
       const invalidator = cacheTags.invalidator({ resolver, onError })
 
-      cacheTags.register('/some-path', ['tag-1', 'tag-2'])
-      cacheTags.register('/other-path', ['tag-1'])
+      cacheTags.registerPath('/some-path', ['tag-1', 'tag-2'])
+      cacheTags.registerPath('/other-path', ['tag-1'])
 
       const { req, res } = getNetworkMock({ query: { tag: 'tag-1' } })
 
