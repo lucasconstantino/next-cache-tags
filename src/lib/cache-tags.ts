@@ -128,6 +128,36 @@ class CacheTags<R extends CacheTagsRegistry> {
   }
 
   /**
+   * Triggers the invalidation of set of tags.
+   */
+  public async invalidate(
+    res: Next.NextApiResponse,
+    tags: string[],
+    wait?: boolean
+  ) {
+    const invalidating: Array<Promise<void>> = []
+
+    for (const tag of tags) {
+      this.log && console.log(`[next-cache-tags] Invalidating "${tag}":`)
+
+      // Fetch the paths related to the invalidating cache-tag.
+      const paths = (await this.registry.extract(this.generateHash(tag))) ?? []
+
+      for (const path of paths) {
+        this.log && console.log(`  - ${path}`)
+
+        // Dispatch revalidation.
+        invalidating.push(res.revalidate(path))
+      }
+    }
+
+    /* istanbul ignore next */
+    if (wait) {
+      await Promise.allSettled(invalidating)
+    }
+  }
+
+  /**
    * Generates a Next.js API Route for cache-tag invalidation.
    */
   public invalidator({
@@ -147,27 +177,9 @@ class CacheTags<R extends CacheTagsRegistry> {
       try {
         // Retrieves tags
         const tags = await resolver(req, res)
-        const invalidating: Array<Promise<void>> = []
 
-        for (const tag of tags) {
-          this.log && console.log(`[next-cache-tags] Invalidating "${tag}":`)
-
-          // Fetch the paths related to the invalidating cache-tag.
-          const paths =
-            (await this.registry.extract(this.generateHash(tag))) ?? []
-
-          for (const path of paths) {
-            this.log && console.log(`  - ${path}`)
-
-            // Dispatch revalidation.
-            invalidating.push(res.revalidate(path))
-          }
-        }
-
-        /* istanbul ignore next */
-        if (wait) {
-          await Promise.allSettled(invalidating)
-        }
+        // Perform invalidation.
+        await this.invalidate(res, tags, wait)
 
         await onSuccess(req, res, tags)
       } catch (err) {
