@@ -10,7 +10,7 @@ Active ISR revalidation based on surrogate keys for Next.js
 
 ## Motivation & Background
 
-This library intends to simplify the adoption of a caching and active invalidation strategy meant for applications that have constant updates to non-personalized data (aka content).
+This library intends to simplify the adoption of a caching and active invalidation strategy meant for applications that have constant updates to non-personalized data/content.
 
 <details>
   <summary>Read more</summary>
@@ -30,15 +30,15 @@ The only way to overcome the dynamicity loss, is to renew the cache. Putting it 
   - Renew: the request goes through, acting like if no cache was there.
   - Stale: the cache is returned, acting like if the cache was valid still.
   - Stale while revalidate: the cached value is returned, but a parallel process goes through to the server, ensuring the cache is eventually renewed for posterior requests.
-- **Revalidate**: means actively _recreating_ a cache, even if no consumer requested the data. This is a common strategy on backend in general, when it populates a cache system such as Redis so that the computed information is promptly available for further operations that may need it.
+- **Revalidate**: means actively _recreating_ a cache, even if no consumer requested the data. This is a common strategy on backend in general, when it populates a cache system – often using a Redis store – so that the computed information is promptly available for further operations that may need it.
 
 ### ⚡ Fast vs. Fresh 🌱
 
-We want ([and need](https://www.portent.com/blog/analytics/research-site-speed-hurting-everyones-revenue.htm)) websites to be _fast_. As immediate as possible. But, we also want (and need) websites to be _fresh_: outdated content being show can cause confusion, bugs, and even direct conversion losses. Caching heavily, but renewing the cache immediately when information changes, is the solution; but it isn't an easy one to achieve.
+We want ([and need](https://www.portent.com/blog/analytics/research-site-speed-hurting-everyones-revenue.htm)) websites to be _fast_. As immediate as possible. But, we also want (and need) websites to be _fresh_: outdated content being shown can cause confusion, bugs, and even direct conversion losses. Caching heavily, but renewing the cache immediately when information changes, is the solution; but it isn't an easy one to achieve.
 
 The problem can be narrowed down to this:
 
-> How can one ensure the most amount of **cache hits** possible, while ensuring the retrieval of the **latest available data** possible?
+> How can one ensure the most amount of **cache hits** possible, while also ensuring the delivery of the **latest available data** possible?
 
 You have probably heard this quote before:
 
@@ -47,11 +47,11 @@ You have probably heard this quote before:
   –– <cite>Phil Karlton</cite>
 </blockquote>
 
-This quote might be controversial, but it summarizes well how much cache invalidation being a complex problem is a consensus among software engineers.
+This quote might be controversial, but it summarizes well how much software engineers see this problem's complexity as a consensus.
 
 ### ♜ Strategies
 
-There are infinite ways to be smart about the invalidation problem. Different strategies for both caching and for invalidation. Their core concept will usually be: _some data changed on the origin, thus the cache must be renewed_. We'll cover a couple of common options supported by Next.js
+There are infinite ways to be smart about the invalidation problem. Different strategies for both caching and for invalidation. Their core concept will usually be: _some data changed on the data store, thus the cache must be renewed_. We'll cover a couple of common options supported by Next.js
 
 #### 1. Static Pages
 
@@ -59,7 +59,7 @@ Next.js will [_always_](https://nextjs.org/docs/advanced-features/automatic-stat
 
 #### 2. Expiration Time
 
-The easist way possible is also the most widely used one: invalidating the cache on a fixed interval. This is often referred to as Time to Live (TTL).
+The easist way possible is also the most widely used one: invalidating the cache on a fixed interval. This is what we know as Time to Live (TTL).
 
 In Next.js, there are two main ways to implement TTL cache:
 
@@ -69,23 +69,23 @@ Either set via [`headers`](https://nextjs.org/docs/api-reference/next.config.js/
 
 ##### B) `revalidate` on `getStaticProps`:
 
-The [`revalidate`](https://nextjs.org/docs/api-reference/data-fetching/get-static-props#revalidate) return value of `getStaticProps` determines the amount in seconds after which the page will be re-generated. That's generally a great solution for data that doesn't change often, such as blog pages, etc.
+The [`revalidate`](https://nextjs.org/docs/api-reference/data-fetching/get-static-props#revalidate) return property from `getStaticProps` functions determine the amount in seconds after which the page will be re-generated. That's generally a great solution for data that doesn't change often, such as blog pages, etc.
 
 > Keep in mind that this setting works using `stale-while-revalidate`, meaning that past the number of seconds set here, the first request will _trigger_ a rebuild, while still returning the stale output. Only subsequent requests will benefit from the revalidation.
 
 #### 3. On-demand Revalidation
 
-Since Next.js 12.1 [introduced on-demand Incremental Static Regeneration](https://nextjs.org/blog/next-12-1#on-demand-incremental-static-regeneration-beta), it's now possible to actively rebuild prerendered pages from API Routes. Usually, this means that your data source – a CMS, for instance – will dispatch a request to an API Route in your system, sending as payload some information on the change made to the data, and your API Route will trigger a rebuild to any page that may have being affected by that change.
+Since Next.js 12.1 [introduced on-demand Incremental Static Regeneration](https://nextjs.org/blog/next-12-1#on-demand-incremental-static-regeneration-beta), it's now possible to actively rebuild prerendered pages. This is done using the `res.revalidate` method inside API Route handlers. Usually, this means that your data store – a CMS, for instance – will dispatch a request to an API Route in your system (aka a "webhook"), sending as payload some information about the change made to the data, and your API Route will trigger a rebuild to any page that may have being affected by that change.
 
 </details>
 
 ## The problem
 
-This is a pretty complex thing to achieve. When you have an ecommerce, for instance, it might be very easy to determine that a product page should be rebuild when the product's price get's updated on your store, but what about other pages where this product might also be shown, such as listing pages, or even other product pages in a "related product" session?
+Definiting the exact pages that need rebuild upon specific data changes is a pretty complex thing to do. When you have an ecommerce, for instance, it might be very hard to determine that a product page should be rebuild when the product's price gets updated on your store, but what about other pages where this product might also be shown, such as listing pages, or even other product pages in a "related product" session?
 
 ## The solution
 
-Although there are many ways to tackle this kind of problem, one of them has being widely adopted by CDNs and caching layers around: tagging the cached resource with tags that identify the source data used to generate the cache. Basically, the idea consists of creating a map of tags to cached resources, so that if some data changes, we can renew every single cached item that was originally generated using that data.
+Although there are many ways to tackle this kind of problem, one of them has being widely adopted by CDNs and caching layers such as reverse proxies: tagging the cached resource with tags that identify the source data used to generate the cache. Basically, the idea consists of creating a map of tags to cached resources, so that if some data changes, we can resolve which tags were affected, and thus renew every single cached item that was originally generated using that specific data.
 
 <details>
   <summary>Read more</summary>
@@ -103,19 +103,19 @@ The following table showcases a map of cached resources (in our case, pages iden
 | `/product-three` | ✅         | ❌          | ❌          | ✅          | ❌     |
 | `/`              | ✅         | ✅          | ✅          | ✅          | ✅     |
 
-- Invalidating `product:1` tag would created pages `/product-one`, `/product-two`, and `/`
-- Invalidating `product:2` tag would created pages `/product-one`, `/product-two`, and `/`
-- Invalidating `product:3` tag would created pages `/product-three` and `/`
-- Invalidating `products` would created all pages
-- Invalidating `home` tag would created page `/` only
+- Invalidating `product:1` tag would re-render pages `/product-one`, `/product-two`, and `/`
+- Invalidating `product:2` tag would re-render pages `/product-one`, `/product-two`, and `/`
+- Invalidating `product:3` tag would re-render pages `/product-three` and `/`
+- Invalidating `products` would re-render all pages
+- Invalidating `home` tag would re-render page `/` only
 
-> [Fastly](https://docs.fastly.com/en/guides/working-with-surrogate-keys) is a CDN well know for early supporting this technique for invalidation, and is a great source for understanding the concepts around it. Other CDNs do support it, some are way behind in this matter for ages, such as AWS's CloudFront. In fact, [Varnish Cache](http://varnish-cache.org/) (not a scam! just an ugly website...) open-source project was perhaps the first to provide such feature, and Fastly being build on top of it is what brings it to that CDN.
+> [Fastly](https://docs.fastly.com/en/guides/working-with-surrogate-keys) has a CDN well know for early supporting this technique for invalidation, and is a great source for understanding the concepts around it. While other CDNs do support it, some have being way behind in this matter for ages, such as AWS's CloudFront. In fact, [Varnish Cache](http://varnish-cache.org/) (not a scam! just an ugly website...) open-source project was perhaps the first to provide such feature, and Fastly being build on top of it is what brings it to that CDN.
 
 </details>
 
 ## This library
 
-`next-cache-tags` introduces a way to use the same strategy, but instead of doing so in a reverse-proxy/CDN, it achieves that by statically rerendering pages upon data changes.
+`next-cache-tags` introduces a way to use the same strategy, but instead of depending on a reverse-proxy/CDN, it achieves that by using Next.js ISR to re-render pages statically upon data changes.
 
 This library provides a [Redis](./src/lib/registry/redis.ts) based data-source, but you can create any other adaptor so long as it implements [`CacheTagsRegistry`](./src/lib/registry/type.ts) interface.
 
@@ -177,7 +177,7 @@ export const getStaticProps = async (ctx) => {
 
 Upon content updates, usually through webhooks, an API Route should be executed and should process the tags to invalidate.
 
-`next-cache-tags` provides a factory to create tag invalidation API Route:
+`next-cache-tags` provides a factory to create tag invalidation API Routes with ease:
 
 ```ts
 // /src/pages/api/webhook.ts
@@ -185,9 +185,11 @@ Upon content updates, usually through webhooks, an API Route should be executed 
 import { cacheTags } from '../../lib/cache-tags'
 
 export default cacheTags.invalidator({
-  resolver: (req) => req.body.product.id,
+  resolver: (req) => [req.body.product.id],
 })
 ```
+
+The `resolve` configuration is a function that receives the original request, and should resolve to the list of cache-tags to be invalidated.
 
 Alternatively, you can execute such invalidations manually in any API Route:
 
@@ -211,6 +213,33 @@ export default handler
 ## Example
 
 Checkout the [./examples/redis](./examples/redis/) project for a complete, yet simple, use case. This project is deployed [here](https://next-cache-tags-redis-example.vercel.app/alphabet).
+
+## Future vision
+
+<details>
+  <summary>Read more</summary>
+
+I expect that eventually Next.js will provide an API for tagging pages. As of data-source for the cache-tags registry, it could the same storage where it stores rendered pages (S3 bucket? Probably...). Alternatively, it could integrate with [Edge Config](https://vercel.com/docs/concepts/edge-network/edge-config) for ultimate availability and performance on writting/reading from the cache-tags registry.
+
+I can imagine that this could become as simple as adding an extra property to the returned object from `getStaticProps`. Something on these lines:
+
+```ts
+// /src/pages/products.tsx
+
+export const getStaticProps = async () => {
+  const products = await loadProducts()
+  const tags = products.map(product => product.id)
+
+  return {
+    tags,
+    props: {
+      products
+    }
+  }
+}
+```
+
+</details>
 
 ## License
 
