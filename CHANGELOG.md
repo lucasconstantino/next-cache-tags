@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/lucasconstantino/next-cache-tags/compare/v0.2.1...v0.2.2) (2023-01-02)
+
+
+### Features
+
+* upgraded next-cache-tags on example ([96e82ad](https://github.com/lucasconstantino/next-cache-tags/commit/96e82ad73af388d13871ab3d3c88a45aff264737))
+
 ### [0.1.4](https://github.com/lucasconstantino/next-cache-tags/compare/v0.1.3...v0.1.4) (2022-11-27)
 
 ### [0.1.3](https://github.com/lucasconstantino/next-cache-tags/compare/v0.1.2...v0.1.3) (2022-11-26)
