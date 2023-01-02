@@ -210,7 +210,7 @@ export default handler
 
 ## Example
 
-Checkout the [./examples/redis](./examples/redis/) project for a complete, yet simple, use case.
+Checkout the [./examples/redis](./examples/redis/) project for a complete, yet simple, use case. This project is deployed [here](https://next-cache-tags-redis-example.vercel.app/alphabet).
 
 ## License
 
