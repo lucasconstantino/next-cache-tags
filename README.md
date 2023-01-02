@@ -166,8 +166,8 @@ export const getStaticProps = async (ctx) => {
 
   const ids = [product.id, ...product.relatedProducts]
   const tags = ids.map(id => `product:${id}`)
-
   
+  cacheTags.register(ctx, tags)
 
   return { props: { product, relatedProducts } }
 }
