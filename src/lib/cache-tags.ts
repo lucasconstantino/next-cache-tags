@@ -10,7 +10,7 @@ type Config<R extends CacheTagsRegistry> = {
   /**
    * Disable/enable logging of cache-tag actions.
    */
-  log?: boolean
+  log?: boolean | ((message: string) => void)
 
   /**
    * A cache-tag registry/store.
@@ -70,12 +70,14 @@ const regex = {
  * Cache-tags service for Next.js.
  */
 class CacheTags<R extends CacheTagsRegistry> {
-  public log: boolean
+  public log: (message: string) => void
   public registry: R
   public generateHash: typeof defaultGenerateHash
 
   constructor(config: Config<R>) {
-    this.log = config.log ?? false
+    const logger = typeof config.log === 'function' ? config.log : console.log
+
+    this.log = config.log ? logger : () => {}
     this.registry = config.registry
     this.generateHash =
       config.generateHash === false
@@ -118,11 +120,8 @@ class CacheTags<R extends CacheTagsRegistry> {
   public registerPath(path: string, tags: string[]) {
     const hashed = tags.map((tag) => this.generateHash(tag))
 
-    /* istanbul ignore next */
-    if (this.log) {
-      console.log(`[next-cache-tags] Regenerating ${path}:`)
-      console.log(`  - Cache-tags: ${hashed.length}`)
-    }
+    this.log(`[next-cache-tags] Regenerating ${path}:`)
+    this.log(`  - Cache-tags: ${hashed.length}`)
 
     return this.registry.register(path, hashed)
   }
@@ -138,13 +137,13 @@ class CacheTags<R extends CacheTagsRegistry> {
     const invalidating: Array<Promise<void>> = []
 
     for (const tag of tags) {
-      this.log && console.log(`[next-cache-tags] Invalidating "${tag}":`)
+      this.log(`[next-cache-tags] Invalidating "${tag}":`)
 
       // Fetch the paths related to the invalidating cache-tag.
       const paths = (await this.registry.extract(this.generateHash(tag))) ?? []
 
       for (const path of paths) {
-        this.log && console.log(`  - ${path}`)
+        this.log(`  - ${path}`)
 
         // Dispatch revalidation.
         invalidating.push(res.revalidate(path))

@@ -27,7 +27,6 @@ const get = (limit = Infinity) => {
 
   // Override
   Error.prepareStackTrace = function (_obj, stack) {
-    console.log('opa')
     return stack
   }
 
