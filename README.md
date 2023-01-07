@@ -15,6 +15,8 @@ This library intends to simplify the adoption of a caching and active invalidati
 <details>
   <summary>Read more</summary>
 
+---
+
 Caching is a must for any serious application. Processing outcomes every time they are requested is not only a waste of resources that can lead to insane costs once user bases grow, it also damages the user experience: poor performance, instability, unreliability, and so on. On the context of web applications, this problem is even bigger as we entirely rely on client/server communication.
 
 Vercel's Next.js is heavily dependent and encouraging of caching. Don't be mistaken: caching doesn't mean you need headers, CDNs, etc: statically built web pages that are served as is, with no further server processing, are perhaps the most aggressive form of caching we have today – and Next.js is a master at it. Anything it can transform into static files, it will.
@@ -77,8 +79,6 @@ The [`revalidate`](https://nextjs.org/docs/api-reference/data-fetching/get-stati
 
 Since Next.js 12.1 [introduced on-demand Incremental Static Regeneration](https://nextjs.org/blog/next-12-1#on-demand-incremental-static-regeneration-beta), it's now possible to actively rebuild prerendered pages. This is done using the `res.revalidate` method inside API Route handlers. Usually, this means that your data store – a CMS, for instance – will dispatch a request to an API Route in your system (aka a "webhook"), sending as payload some information about the change made to the data, and your API Route will trigger a rebuild to any page that may have being affected by that change.
 
-</details>
-
 ## The problem
 
 Definiting the exact pages that need rebuild upon specific data changes is a pretty complex thing to do. When you have an ecommerce, for instance, it might be very hard to determine that a product page should be rebuild when the product's price gets updated on your store, but what about other pages where this product might also be shown, such as listing pages, or even other product pages in a "related product" session?
@@ -86,9 +86,6 @@ Definiting the exact pages that need rebuild upon specific data changes is a pre
 ## The solution
 
 Although there are many ways to tackle this kind of problem, one of them has being widely adopted by CDNs and caching layers such as reverse proxies: tagging the cached resource with tags that identify the source data used to generate the cache. Basically, the idea consists of creating a map of tags to cached resources, so that if some data changes, we can resolve which tags were affected, and thus renew every single cached item that was originally generated using that specific data.
-
-<details>
-  <summary>Read more</summary>
 
 The following table showcases a map of cached resources (in our case, pages identified by their pathnames) and the tags used for each resource:
 
@@ -111,13 +108,13 @@ The following table showcases a map of cached resources (in our case, pages iden
 
 > [Fastly](https://docs.fastly.com/en/guides/working-with-surrogate-keys) has a CDN well know for early supporting this technique for invalidation, and is a great source for understanding the concepts around it. While other CDNs do support it, some have being way behind in this matter for ages, such as AWS's CloudFront. In fact, [Varnish Cache](http://varnish-cache.org/) (not a scam! just an ugly website...) open-source project was perhaps the first to provide such feature, and Fastly being build on top of it is what brings it to that CDN.
 
-</details>
-
 ## This library
 
 `next-cache-tags` introduces a way to use the same strategy, but instead of depending on a reverse-proxy/CDN, it achieves that by using Next.js ISR to re-render pages statically upon data changes.
 
 This library provides a [Redis](./src/lib/registry/redis.ts) based data-source, but you can create any other adaptor so long as it implements [`CacheTagsRegistry`](./src/lib/registry/type.ts) interface.
+
+</details>
 
 ---
 
