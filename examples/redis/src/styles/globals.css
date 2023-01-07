@@ -19,6 +19,7 @@ a {
 }
 
 #page {
+  position: relative;
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -31,6 +32,33 @@ a {
 #page > main {
   flex-grow: 1;
   overflow: auto;
+}
+
+#cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: white;
+}
+
+#cover > p:first-child {
+  font-weight: bold;
+}
+
+#cover > p:last-child {
+  margin: 0 0 10vh;
+}
+
+#cover .icon {
+  font-size: 4em;
+}
+
+@media (min-width: 1000px) {
+  #cover {
+    display: none;
+  }
 }
 
 #alphabet {

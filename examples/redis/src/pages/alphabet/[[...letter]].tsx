@@ -56,6 +56,14 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
       <aside>
         <CacheUpdater cacheInfo={cacheInfo} frequency={5000} />
       </aside>
+
+      <aside id="cover">
+        <p>
+          <span className="icon">🤦</span> <br />
+          Sorry, this isn't mobile friendly!
+        </p>
+        <p>Please, open it in a bigger screen.</p>
+      </aside>
     </div>
   )
 }
