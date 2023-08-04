@@ -33,7 +33,7 @@ const AlphabetPage: NextPage<TProps> = ({ letters }) => {
         <p>
           <strong>1) Click a letter to navigate to it's page (shows underlined)</strong>
           <br />
-          <strong>2) Cmd+click a letter to renew the cache of all related letter pages.</strong>
+          <strong>2) Cmd+click a letter to renew the cache of surrounding letter pages</strong>
           <br />
           <strong>3) Click on the current letter to navigate to home</strong>
         </p>
