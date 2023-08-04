@@ -215,11 +215,16 @@ Checkout the [./examples/redis](./examples/redis/) project for a complete, yet s
 
 ### 2023-01
 
+Vercel implemented `revalidateTag` around [March 2023](https://github.com/vercel/next.js/pull/47720).
+
+<details>
+  <summary>See previous comments</summary>
+
 I expect that eventually Next.js will provide an API for tagging pages. As of data-source for the cache-tags registry, it could the same storage where it stores rendered pages (S3 bucket? Probably...). Alternatively, it could integrate with [Edge Config](https://vercel.com/docs/concepts/edge-network/edge-config) for ultimate availability and performance on writting/reading from the cache-tags registry.
 
 I can imagine that this could become as simple as adding an extra property to the returned object from `getStaticProps`. Something on these lines:
 
-```ts
+```js
 // /src/pages/products.tsx
 
 export const getStaticProps = async () => {
@@ -243,3 +248,33 @@ export default async function handler(req, res) {
 
 ```
 
+</details>
+
+### 2023-08
+
+Vercel's implementation of cache tags is **very limited** as of now. In summary, it allows one to tag resource *requests* with tags in order to revalidate them later on:
+
+```js
+// server-components
+fetch('https://...', { next: { tags: ['example'] } })
+
+// /app/api/revalidate/route.ts
+import { revalidateTag } from 'next/cache'
+ 
+export async function GET(request) {
+  revalidateTag('example')
+  return NextResponse.json({ revalidated: true, now: Date.now() })
+}
+```
+
+This approach is falty, in that it is currently not possible to tag cache items based on their *content*, but rather on their *requesting*: by the time a homepage, for instance, requests the "latest news", the system has no clue which news will be returned on the response, and therefore I cannot objectively revalidate the homepage based on changes made to the news that are displayed. If a change some news title in the system, I cannot be sure this news title is shown in the homepage, therefore any news title change will need to revalidate the homepage – even changes to news items that are *not* shown in the homepage.
+
+Fastly, or any reverse-proxy CDN for that matter, will always consume caching tags [based on the *response*](https://docs.fastly.com/en/guides/working-with-surrogate-keys#about-the-surrogate-key-header).
+
+To cricumvent this problem, I can imagine something similar to the following:
+
+```js
+fetch('https://...', { next: { tags: (res) => [...] } })
+```
+
+This would give the possibility to create precise cache tags that are based on any information responsed – be it headers, or the content payload itself.
