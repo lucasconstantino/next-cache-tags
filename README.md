@@ -213,6 +213,8 @@ Checkout the [./examples/redis](./examples/redis/) project for a complete, yet s
 
 ## Future vision
 
+### 2023-01
+
 I expect that eventually Next.js will provide an API for tagging pages. As of data-source for the cache-tags registry, it could the same storage where it stores rendered pages (S3 bucket? Probably...). Alternatively, it could integrate with [Edge Config](https://vercel.com/docs/concepts/edge-network/edge-config) for ultimate availability and performance on writting/reading from the cache-tags registry.
 
 I can imagine that this could become as simple as adding an extra property to the returned object from `getStaticProps`. Something on these lines:
@@ -231,5 +233,13 @@ export const getStaticProps = async () => {
     }
   }
 }
+
+// /src/pages/api/revalidate.ts
+
+export default async function handler(req, res) {
+  await res.revalidate({ tags: [req.query.tag] })
+  return res.status(200)
+}
+
 ```
 
